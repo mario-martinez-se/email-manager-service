@@ -1,6 +1,7 @@
 "use strict";
 
-import { Event, EventFactory, ReservationConfirmedEvent } from "./Events";
+import { Event, EventFactory } from "./Events";
+import { CommandFactory } from "./Commands";
 
 module.exports.listener = async event => {
   console.log(JSON.stringify(event));
@@ -17,41 +18,4 @@ async function processEvent(message) {
   const result = await command.execute();
   console.log(`Result: ${JSON.stringify(result)}`);
   return null;
-}
-
-interface CommandResult {
-  success: boolean;
-}
-interface Command {
-  execute(): Promise<CommandResult>;
-}
-
-class ReservationConfirmedCommand implements Command {
-  private event: ReservationConfirmedEvent;
-  constructor(event: ReservationConfirmedEvent) {
-    this.event = event;
-  }
-  async execute() {
-    console.log(
-      `Executing reservation confirm command: ${JSON.stringify(this.event)}`
-    );
-    return { success: true };
-  }
-}
-
-class NopCommand implements Command {
-  async execute() {
-    return { success: true };
-  }
-}
-class CommandFactory {
-  static buildCommand(event: Event): Command {
-    console.log(`eventType: ${event.eventType}`);
-    switch (event.eventType) {
-      case "RESERVATION_CONFIRMED":
-        return new ReservationConfirmedCommand(event);
-      default:
-        return new NopCommand();
-    }
-  }
 }
