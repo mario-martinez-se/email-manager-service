@@ -4,10 +4,36 @@ provider:
   name: aws
   runtime: nodejs8.10
   stage: ${opt:stage,'dev'}
-  region: eu-west-2
+  region: ${opt:region, 'eu-west-2'}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+      Resource: "*"
 
 plugins:
   - serverless-plugin-typescript
+  - serverless-dotenv-plugin
+
+custom:
+  emailTemplatesTableName: ${self:service}-email-templates-${self:provider.stage}
+
+resources:
+  Resources:
+    EmailTemplatesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.emailTemplatesTableName}
+        AttributeDefinitions:
+          - AttributeName: key
+            AttributeType: S
+        KeySchema:
+          - AttributeName: key
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
 
 functions:
   listener:
@@ -18,3 +44,8 @@ functions:
           batchSize: 100
           startingPosition: LATEST
           enabled: true
+    environment:
+      emailServiceUrl: ${env:EMAIL_SERVICE_URL}
+      emailSender: ${env:EMAIL_SENDER}
+      emailTemplatesTableName: ${self:custom.emailTemplatesTableName}
+      myRegion: ${opt:region, 'eu-west-2'}

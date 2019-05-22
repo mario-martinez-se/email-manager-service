@@ -4,12 +4,29 @@ export type UnknownEvent = {
 };
 export type ReservationConfirmedEvent = {
   eventType: "RESERVATION_CONFIRMED";
+  // TODO: This will need to contain all the useful information about the reservation
   user: {
     email: string;
   };
 };
+
+function isReservationConfirmedEvent(
+  obj: any
+): obj is ReservationConfirmedEvent {
+  return (
+    obj &&
+    typeof obj === "object" &&
+    typeof obj["eventType"] === "string" &&
+    typeof obj["user"] === "object" &&
+    typeof obj["user"]["email"] == "string"
+  );
+}
+
 export class EventFactory {
   static buildEvent(base64Data: string): Event {
+    const unknownEvent: UnknownEvent = {
+      eventType: "UNKNOWN"
+    };
     const obj = this.decodeData(base64Data);
     if (!obj) {
       return {
@@ -18,11 +35,9 @@ export class EventFactory {
     }
     switch (obj.eventType) {
       case "RESERVATION_CONFIRMED":
-        return obj as ReservationConfirmedEvent;
+        return isReservationConfirmedEvent(obj) ? obj : unknownEvent;
       default:
-        return {
-          eventType: "UNKNOWN"
-        };
+        return unknownEvent;
     }
   }
   static decodeData(base64Data: string): any {
