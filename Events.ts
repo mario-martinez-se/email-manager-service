@@ -7,6 +7,8 @@ export type ReservationConfirmedEvent = {
   // TODO: This will need to contain all the useful information about the reservation
   user: {
     email: string;
+    firstName: string;
+    lastName: string;
   };
 };
 
@@ -18,7 +20,9 @@ function isReservationConfirmedEvent(
     typeof obj === "object" &&
     typeof obj["eventType"] === "string" &&
     typeof obj["user"] === "object" &&
-    typeof obj["user"]["email"] == "string"
+    typeof obj["user"]["email"] == "string" &&
+    typeof obj["user"]["firstName"] == "string" &&
+    typeof obj["user"]["lastName"] == "string"
   );
 }
 

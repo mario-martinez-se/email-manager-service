@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Event, ReservationConfirmedEvent } from "./Events";
 import { TemplateManager, Template } from "./Managers";
+import { TemplateParser } from "./TemplateParser";
 import { CommandResult, FAILURE, SUCCESS } from "./CommandResult";
 interface Command {
   execute(): Promise<CommandResult>;
@@ -38,9 +39,10 @@ class ReservationConfirmedCommand implements Command {
     template: Template
   ): Promise<CommandResult> {
     try {
-      const parsedBody = TemplateManager.parseTemplate(template, {
-        name: "Luke"
-      });
+      const parsedBody = TemplateParser.parseCustomerConfirmationEmail(
+        template,
+        this.event
+      );
       //TODO: move this to somewhere else
       await axios.post(process.env.emailServiceUrl || "", {
         email: this.event.user.email || "",
