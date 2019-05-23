@@ -1,3 +1,5 @@
+import Mustache from "mustache";
+
 const AWS = require("aws-sdk");
 
 export class Template {
@@ -34,5 +36,11 @@ export class TemplateManager {
       throw new Error(`Couldn't find template with key ${key}`);
     }
     return Template.parseFromDynamoDbItem(response.Item);
+  }
+
+  static parseTemplate(template: Template, model: any): string {
+    const decodedBody = new Buffer(template.body, "base64").toString("ascii");
+    const renderedBody = Mustache.render(decodedBody, model);
+    return new Buffer(renderedBody).toString("base64");
   }
 }

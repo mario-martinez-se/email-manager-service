@@ -38,12 +38,15 @@ class ReservationConfirmedCommand implements Command {
     template: Template
   ): Promise<CommandResult> {
     try {
+      const parsedBody = TemplateManager.parseTemplate(template, {
+        name: "Luke"
+      });
       //TODO: move this to somewhere else
       await axios.post(process.env.emailServiceUrl || "", {
         email: this.event.user.email || "",
-        subject: template.subject, //"Here is your confirmation email!",
+        subject: template.subject,
         sender: process.env.emailSender,
-        body: template.body //"PGh0bWw+CjxoZWFkPjwvaGVhZD4KPGJvZHk+CiAgPGgxPkFtYXpvbiBTRVMgVGVzdCAoU0RLIGZvciBQeXRob24pPC9oMT4KICA8cD5UaGlzIGVtYWlsIHdhcyBzZW50IHdpdGgKICAgIDxhIGhyZWY9J2h0dHBzOi8vYXdzLmFtYXpvbi5jb20vc2VzLyc+QW1hem9uIFNFUzwvYT4gdXNpbmcgdGhlCiAgICA8YSBocmVmPSdodHRwczovL2F3cy5hbWF6b24uY29tL3Nkay1mb3ItcHl0aG9uLyc+CiAgICAgIEFXUyBTREsgZm9yIFB5dGhvbiAoQm90byk8L2E+LjwvcD4KPC9ib2R5Pgo8L2h0bWw+"
+        body: parsedBody
       });
       console.info("Response sent");
       return SUCCESS;
