@@ -5,13 +5,18 @@
   "main": "index.js",
   "dependencies": {
     "@types/mustache": "^0.8.32",
+    "apollo-boost": "^0.4.0",
+    "apollo-client": "^2.6.0",
+    "apollo-client-preset": "^1.0.8",
+    "apollo-codegen": "^0.20.2",
     "axios": "^0.18.0",
+    "graphql": "^14.3.1",
+    "graphql-tag": "^2.10.1",
     "mustache": "^3.0.1",
     "serverless-dotenv-plugin": "^2.1.1"
   },
   "devDependencies": {
     "serverless-plugin-typescript": "^1.1.7",
-    "ts-node": "^8.1.0",
     "typescript": "^3.4.5"
   },
   "scripts": {

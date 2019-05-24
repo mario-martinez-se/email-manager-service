@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Event, ReservationConfirmedEvent } from "./Events";
-import { TemplateManager, Template } from "./Managers";
+import { TemplateManager, Template, GithubTemplateManager } from "./Managers";
 import { TemplateParser } from "./TemplateParser";
 import { CommandResult, FAILURE, SUCCESS } from "./CommandResult";
 interface Command {
@@ -25,7 +25,7 @@ class ReservationConfirmedCommand implements Command {
       console.log(
         `Executing reservation confirm command: ${JSON.stringify(this.event)}`
       );
-      const templateManager = new TemplateManager();
+      const templateManager = new GithubTemplateManager();
       return this.sendCustomerConfirmationEmail(
         await templateManager.getTemplate(this.TEMPLATE_KEY)
       );
@@ -39,16 +39,16 @@ class ReservationConfirmedCommand implements Command {
     template: Template
   ): Promise<CommandResult> {
     try {
-      const parsedBody = TemplateParser.parseCustomerConfirmationEmail(
+      const parsedEmail = TemplateParser.parseCustomerConfirmationEmail(
         template,
         this.event
       );
       //TODO: move this to somewhere else
       await axios.post(process.env.emailServiceUrl || "", {
         email: this.event.user.email || "",
-        subject: template.subject,
+        subject: parsedEmail.subject,
         sender: process.env.emailSender,
-        body: parsedBody
+        body: parsedEmail.body
       });
       console.info("Response sent");
       return SUCCESS;
