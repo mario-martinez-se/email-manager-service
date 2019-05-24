@@ -18,6 +18,12 @@ plugins:
 
 custom:
   emailTemplatesTableName: ${self:service}-email-templates-${self:provider.stage}
+  env:
+    emailServiceUrl: ${env:EMAIL_SERVICE_URL}
+    emailSender: ${env:EMAIL_SENDER}
+    emailTemplatesTableName: ${self:custom.emailTemplatesTableName}
+    myRegion: ${opt:region, 'eu-west-2'}
+    githubToken: ${env:GITHUB_TOKEN}
 
 resources:
   Resources:
@@ -44,9 +50,8 @@ functions:
           batchSize: 100
           startingPosition: LATEST
           enabled: true
-    environment:
-      emailServiceUrl: ${env:EMAIL_SERVICE_URL}
-      emailSender: ${env:EMAIL_SENDER}
-      emailTemplatesTableName: ${self:custom.emailTemplatesTableName}
-      myRegion: ${opt:region, 'eu-west-2'}
-      githubToken: ${env:GITHUB_TOKEN}
+    environment: ${self:custom.env}
+  generate:
+    handler: handler.generate
+    events:
+      - http: POST generate

@@ -2,14 +2,25 @@ export type Event = UnknownEvent | ReservationConfirmedEvent;
 export type UnknownEvent = {
   eventType: "UNKNOWN";
 };
+
+export type UserData = {
+  email: string;
+  firstName: string;
+  lastName: string;
+};
+export function isUserData(obj: any): obj is UserData {
+  return (
+    obj &&
+    typeof obj === "object" &&
+    typeof obj["email"] == "string" &&
+    typeof obj["firstName"] == "string" &&
+    typeof obj["lastName"] == "string"
+  );
+}
 export type ReservationConfirmedEvent = {
   eventType: "RESERVATION_CONFIRMED";
   // TODO: This will need to contain all the useful information about the reservation
-  user: {
-    email: string;
-    firstName: string;
-    lastName: string;
-  };
+  user: UserData;
 };
 
 function isReservationConfirmedEvent(
@@ -20,9 +31,7 @@ function isReservationConfirmedEvent(
     typeof obj === "object" &&
     typeof obj["eventType"] === "string" &&
     typeof obj["user"] === "object" &&
-    typeof obj["user"]["email"] == "string" &&
-    typeof obj["user"]["firstName"] == "string" &&
-    typeof obj["user"]["lastName"] == "string"
+    isUserData(obj.user)
   );
 }
 
