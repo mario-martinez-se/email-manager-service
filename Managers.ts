@@ -28,6 +28,7 @@ export class DynamoDBTemplateManager implements TemplateManager {
    * can access them. Also, is probably more efficient to get the templates
    * from AWS than quering Github.
    */
+
   private dynamodb: any;
   private tableName: string;
   constructor() {
