@@ -60,7 +60,6 @@ class ReservationConfirmedCommand implements Command {
 }
 export class CommandFactory {
   static buildCommand(event: Event): Command {
-    console.log(`eventType: ${event.eventType}`);
     switch (event.eventType) {
       case "RESERVATION_CONFIRMED":
         return new ReservationConfirmedCommand(event);

@@ -36,7 +36,6 @@ export class DynamoDBTemplateManager implements TemplateManager {
     this.tableName = process.env.emailTemplatesTableName || "";
   }
   async getTemplate(key: string): Promise<Template> {
-    console.log(`TableName: ${this.tableName}`);
     const response = await this.dynamodb
       .getItem({
         Key: {
