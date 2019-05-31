@@ -3,36 +3,35 @@ export type UnknownEvent = {
   eventType: "UNKNOWN";
 };
 
-export type UserData = {
+export class UserData {
   email: string;
   firstName: string;
   lastName: string;
-};
-export function isUserData(obj: any): obj is UserData {
-  return (
-    obj &&
-    typeof obj === "object" &&
-    typeof obj["email"] == "string" &&
-    typeof obj["firstName"] == "string" &&
-    typeof obj["lastName"] == "string"
-  );
+
+  static isOfType(obj: any): obj is UserData {
+    return (
+      obj &&
+      typeof obj === "object" &&
+      typeof obj["email"] == "string" &&
+      typeof obj["firstName"] == "string" &&
+      typeof obj["lastName"] == "string"
+    );
+  }
 }
-export type ReservationConfirmedEvent = {
+export class ReservationConfirmedEvent {
   eventType: "RESERVATION_CONFIRMED";
   // TODO: This will need to contain all the useful information about the reservation
   user: UserData;
-};
 
-function isReservationConfirmedEvent(
-  obj: any
-): obj is ReservationConfirmedEvent {
-  return (
-    obj &&
-    typeof obj === "object" &&
-    typeof obj["eventType"] === "string" &&
-    typeof obj["user"] === "object" &&
-    isUserData(obj.user)
-  );
+  static isOfType(obj: any): obj is ReservationConfirmedEvent {
+    return (
+      obj &&
+      typeof obj === "object" &&
+      typeof obj["eventType"] === "string" &&
+      typeof obj["user"] === "object" &&
+      UserData.isOfType(obj.user)
+    );
+  }
 }
 
 export class EventFactory {
@@ -48,7 +47,7 @@ export class EventFactory {
     }
     switch (obj.eventType) {
       case "RESERVATION_CONFIRMED":
-        return isReservationConfirmedEvent(obj) ? obj : unknownEvent;
+        return ReservationConfirmedEvent.isOfType(obj) ? obj : unknownEvent;
       default:
         return unknownEvent;
     }

@@ -55,3 +55,4 @@ functions:
     handler: handler.generate
     events:
       - http: POST generate
+    environment: ${self:custom.env}

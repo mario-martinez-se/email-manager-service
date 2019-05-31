@@ -48,7 +48,7 @@ class ReservationConfirmedCommand implements Command {
         email: this.event.user.email || "",
         subject: parsedEmail.subject,
         sender: process.env.emailSender,
-        body: parsedEmail.body
+        body: new Buffer(parsedEmail.body).toString("base64")
       });
       console.info("Response sent");
       return SUCCESS;

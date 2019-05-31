@@ -15,7 +15,7 @@ export class TemplateParser {
     const renderedSubject = Mustache.render(template.subject, model);
     return {
       subject: renderedSubject,
-      body: new Buffer(renderedBody).toString("base64")
+      body: renderedBody
     };
   }
   static parseCustomerConfirmationEmail(

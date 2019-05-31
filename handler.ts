@@ -1,10 +1,9 @@
 "use strict";
 
-import { Event, EventFactory, UserData, isUserData } from "./Events";
+import { Event, EventFactory, UserData } from "./Events";
 import { CommandFactory } from "./Commands";
-import { UserInfo } from "os";
 import { TemplateParser } from "./TemplateParser";
-import { GithubTemplateManager, Template } from "./Managers";
+import { GithubTemplateManager, Template, HttpManager } from "./Managers";
 
 module.exports.listener = async event => {
   const messages = event.Records.map(record => record.kinesis);
@@ -12,61 +11,10 @@ module.exports.listener = async event => {
   return;
 };
 
-type GenerateEmailRequest = {
-  templateName: string;
-  user: UserData;
-};
-
-function isGenerateEmailRequest(obj: any): obj is GenerateEmailRequest {
-  return (
-    obj &&
-    typeof obj === "object" &&
-    obj["templateName"] === "string" &&
-    isUserData(obj["user"])
-  );
-}
 module.exports.generate = async event => {
-  //TODO: Fix this lambda
-  console.log(JSON.stringify(event));
   const body = JSON.parse(event.body);
-  if (!isGenerateEmailRequest(body)) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify(
-        {
-          message: "Incorrect request"
-        },
-        null,
-        2
-      )
-    };
-  }
-
-  const templateManager = new GithubTemplateManager();
-  const template: Template = await templateManager.getTemplate(
-    body.templateName
-  );
-  if (!template) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify(
-        {
-          message: "Unknown template"
-        },
-        null,
-        2
-      )
-    };
-  }
-
-  const emailParsed = TemplateParser.parseCustomerConfirmationEmail(
-    template,
-    body
-  );
-  return {
-    statusCode: 200,
-    body: emailParsed.body
-  };
+  console.log(JSON.stringify(body));
+  return await new HttpManager().generateResponse(body);
 };
 
 async function processEvent(message) {
