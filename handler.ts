@@ -2,8 +2,7 @@
 
 import { Event, EventFactory, UserData } from "./Events";
 import { CommandFactory } from "./Commands";
-import { TemplateParser } from "./TemplateParser";
-import { GithubTemplateManager, Template, HttpManager } from "./Managers";
+import { HttpManager } from "./managers/HttpManager";
 
 module.exports.listener = async event => {
   const messages = event.Records.map(record => record.kinesis);

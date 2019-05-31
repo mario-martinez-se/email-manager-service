@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Event, ReservationConfirmedEvent } from "./Events";
-import { TemplateManager, Template, GithubTemplateManager } from "./Managers";
+import { Template } from "./managers/Template";
+import { GithubTemplateManager } from "./managers/GithubTemplateManager";
 import { TemplateParser } from "./TemplateParser";
 import { CommandResult, FAILURE, SUCCESS } from "./CommandResult";
 interface Command {

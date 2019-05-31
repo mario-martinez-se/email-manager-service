@@ -1,4 +1,4 @@
-import { Template } from "./Managers";
+import { Template } from "./managers/Template";
 import * as Mustache from "mustache";
 
 type EmailParseResult = {
