@@ -10,6 +10,7 @@ interface Command {
 
 class NopCommand implements Command {
   async execute() {
+    console.log("Executing NopCommand");
     return { success: true };
   }
 }
@@ -61,6 +62,7 @@ class ReservationConfirmedCommand implements Command {
 }
 export class CommandFactory {
   static buildCommand(event: Event): Command {
+    console.log(`Building command for event type: ${event.eventType}`);
     switch (event.eventType) {
       case "RESERVATION_CONFIRMED":
         return new ReservationConfirmedCommand(event);

@@ -24,6 +24,8 @@ export class ReservationConfirmedEvent {
   user: UserData;
 
   static isOfType(obj: any): obj is ReservationConfirmedEvent {
+    console.log(`ReservationConfirmedEvent: ${JSON.stringify(obj)}`);
+    // TODO: More properties to be verified
     return (
       obj &&
       typeof obj === "object" &&
@@ -41,14 +43,14 @@ export class EventFactory {
     };
     const obj = this.decodeData(base64Data);
     if (!obj) {
-      return {
-        eventType: "UNKNOWN"
-      };
+      console.log(`Empty Event`);
+      return unknownEvent;
     }
     switch (obj.eventType) {
       case "RESERVATION_CONFIRMED":
         return ReservationConfirmedEvent.isOfType(obj) ? obj : unknownEvent;
       default:
+        console.log(`Unkown event type ${obj.eventType}`);
         return unknownEvent;
     }
   }
