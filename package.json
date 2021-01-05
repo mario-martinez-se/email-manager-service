@@ -9,7 +9,7 @@
     "apollo-client": "^2.6.0",
     "apollo-client-preset": "^1.0.8",
     "apollo-codegen": "^0.20.2",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "graphql": "^14.3.1",
     "graphql-tag": "^2.10.1",
     "mustache": "^3.0.1",
